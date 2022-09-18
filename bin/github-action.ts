@@ -5,28 +5,32 @@ import { Options } from "../src/types/options";
 /**
  * Converts a comma separated list of strings into a `string[]`.
  */
-function getStringArrayInput(name: string): string[] {
-  return getInput(name)
-    .split(",")
+function getOptionalStringArrayInput(name: string): string[] | undefined {
+  return getOptionalInput(name)
+    ?.split(",")
     .map((scope) => scope.trim());
+}
+
+function getOptionalInput(name: string): string | undefined {
+  return getInput(name) || undefined;
 }
 
 function getOptions(): Options {
   let options: Options;
-  const module = getInput("module");
+  const module = getOptionalInput("module");
   if (module) {
     options = {
       module,
-      scopes: getStringArrayInput("scopes"),
+      scopes: getOptionalStringArrayInput("scopes"),
     };
   } else {
     options = {};
   }
-  options.breakingChangeHeading = getInput("breakingChangeHeading");
-  options.featHeading = getInput("featHeading");
-  options.fixHeading = getInput("fixHeading");
-  options.prefix = getInput("prefix");
-  options.suffix = getInput("suffix");
+  options.breakingChangeHeading = getOptionalInput("breakingChangeHeading");
+  options.featHeading = getOptionalInput("featHeading");
+  options.fixHeading = getOptionalInput("fixHeading");
+  options.prefix = getOptionalInput("prefix");
+  options.suffix = getOptionalInput("suffix");
 
   return options;
 }

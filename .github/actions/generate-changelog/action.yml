@@ -1,22 +1,35 @@
 name: Generate Changelog
 description: Generate changelog for a module based on its previous tag and included scopes
 inputs:
+  prefix:
+    description: "See https://github.com/aklinker1/generate-changelog/blob/main/src/types/options.ts"
+  suffix:
+    description: "See https://github.com/aklinker1/generate-changelog/blob/main/src/types/options.ts"
+  fixHeading:
+    description: "See https://github.com/aklinker1/generate-changelog/blob/main/src/types/options.ts"
+  featHeading:
+    description: "See https://github.com/aklinker1/generate-changelog/blob/main/src/types/options.ts"
+  breakingChangeHeading:
+    description: "See https://github.com/aklinker1/generate-changelog/blob/main/src/types/options.ts"
   module:
-    description: The name of the component/module being published. It's tag will be it's name, but in lower-camel-case characters.
-    required: true
-  message:
-    description: Text shown at the top of the changelog before the breaking changes, features, and fixes.
-    required: false
+    description: "See https://github.com/aklinker1/generate-changelog/blob/main/src/types/options.ts"
   scopes:
-    description: Comma separated list of scopes to filter the changelog down to
-    required: true
+    description: "See https://github.com/aklinker1/generate-changelog/blob/main/src/types/options.ts"
+
 outputs:
+  prevVersion:
+    description: The suggested prev version
+  prevTag:
+    description: Commits after this tag were used to generate the changelog
   changelog:
     description: The filtered changelog
   skipped:
     description: Will be set to true when the generated changelog includes no fixes or features
   nextVersion:
     description: The suggested next version based on the changes
+  nextTag:
+    description: The suggested tag to create a release with
+
 runs:
   using: node16
   main: dist/action.cjs
