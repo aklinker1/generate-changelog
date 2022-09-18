@@ -66,3 +66,13 @@ generateChangelog({
     // ...
 })
 ```
+
+### CLI
+
+Use the `generate-changelog` command to output version and changelog details. the final JSON ouputs are logged to stderr for you to parse and consume.
+
+```bash
+generate-changelog [options] [dir]
+```
+
+See `generate-changelog --help` for options and usage.

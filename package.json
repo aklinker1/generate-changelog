@@ -17,21 +17,24 @@
     "dist"
   ],
   "scripts": {
+    "cli": "tsx bin/cli.ts",
     "compile": "tsc --noEmit",
     "test": "vitest",
     "build": "pnpm build:package && pnpm build:cli && pnpm build:github-action",
     "build:package": "tsup src/index.ts --sourcemap --format cjs,esm --dts",
-    "build:cli": "echo 'TODO'",
+    "build:cli": "tsup bin/cli.ts --sourcemap",
     "build:github-action": "echo 'TODO'",
     "prepack": "rimraf dist && pnpm build:package && pnpm build:cli"
   },
   "dependencies": {
+    "commander": "^9.4.0",
     "simple-git": "^3.14.1"
   },
   "devDependencies": {
     "@types/node": "^18.7.18",
     "rimraf": "^3.0.2",
     "tsup": "^6.2.3",
+    "tsx": "^3.9.0",
     "typescript": "^4.8.3",
     "vite": "^3.1.2",
     "vitest": "^0.23.4"
