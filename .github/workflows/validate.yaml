@@ -1,0 +1,34 @@
+name: Validate
+on: [push, workflow_call]
+
+jobs:
+  checks:
+    name: Checks
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+        
+      - name: Type Check
+        run: pnpm compile
+        
+      - name: Build NPM package
+        run: pnpm build:package
+
+      - name: Build CLI
+        run: pnpm build:cli
+
+      - name: Build GitHub Action
+        run: pnpm build:github-action
