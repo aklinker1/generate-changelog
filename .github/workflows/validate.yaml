@@ -32,3 +32,6 @@ jobs:
 
       - name: Build GitHub Action
         run: pnpm build:github-action
+
+      - name: Run Tests
+        run: pnpm test
