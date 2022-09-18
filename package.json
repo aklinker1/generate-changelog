@@ -20,18 +20,20 @@
     "cli": "tsx bin/cli.ts",
     "compile": "tsc --noEmit",
     "test": "vitest",
-    "build": "pnpm build:package && pnpm build:cli && pnpm build:github-action",
+    "build": "pnpm build:package --clean && pnpm build:cli && pnpm build:github-action",
     "build:package": "tsup src/index.ts --sourcemap --format cjs,esm --dts",
     "build:cli": "tsup bin/cli.ts --sourcemap",
-    "build:github-action": "echo 'TODO'",
+    "build:github-action": "tsup src/index.ts --clean --minify --format cjs --out-dir .github/dist",
     "prepack": "rimraf dist && pnpm build:package && pnpm build:cli"
   },
   "dependencies": {
+    "@actions/core": "^1.9.1",
     "commander": "^9.4.0",
     "simple-git": "^3.14.1"
   },
   "devDependencies": {
     "@types/node": "^18.7.18",
+    "esbuild": "^0.15.8",
     "rimraf": "^3.0.2",
     "tsup": "^6.2.3",
     "tsx": "^3.9.0",
