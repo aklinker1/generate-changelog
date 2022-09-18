@@ -44,7 +44,7 @@ jobs:
             const pkg = JSON.parse(\`$(cat package.json)\`);
             pkg.version = '${{ steps.changelog.outputs.nextVersion }}';
             JSON.stringify(pkg, null, 2);
-          " > pkg.json
+          " > package.json
           echo "Updated package.json:"
           cat ./package.json
           git config --global user.email "changelog.action@github.com"
