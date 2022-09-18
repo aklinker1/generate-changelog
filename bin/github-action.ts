@@ -1,3 +1,4 @@
+console.log("Running");
 import { getInput, setOutput } from "@actions/core";
 import { generateChangelog } from "../src";
 import { Options } from "../src/types/options";
@@ -36,6 +37,7 @@ function getOptions(): Options {
 }
 
 async function main() {
+  console.log("Running");
   const options = getOptions();
   const outputs = await generateChangelog(options);
   Object.entries(outputs).map(([key, value]) => setOutput(key, value));

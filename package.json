@@ -23,7 +23,7 @@
     "build": "pnpm build:package --clean && pnpm build:cli && pnpm build:github-action",
     "build:package": "tsup src/index.ts --sourcemap --format cjs,esm --dts",
     "build:cli": "tsup bin/cli.ts --sourcemap",
-    "build:github-action": "tsup src/index.ts --clean --minify --format cjs --out-dir .github/actions/generate-changelog/dist",
+    "build:github-action": "esbuild --bundle src/index.ts --outdir=.github/actions/generate-changelog/dist --minify --sourcemap --external:fs --external:child_process --target=node16",
     "prepack": "rimraf dist && pnpm build:package && pnpm build:cli"
   },
   "dependencies": {
