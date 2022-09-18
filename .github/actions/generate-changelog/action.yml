@@ -19,4 +19,4 @@ outputs:
     description: The suggested next version based on the changes
 runs:
   using: node16
-  main: .github/dist/action.cjs
+  main: dist/action.cjs
