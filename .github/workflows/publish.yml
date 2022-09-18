@@ -5,13 +5,15 @@ jobs:
   validate:
     uses: ./.github/workflows/validate.yml
 
-  release:
+  release-notes:
     name: Release
     runs-on: ubuntu-22.04
-    # needs: [validate]
+    needs: [validate]
     outputs:
+      changelog: ${{ steps.changelog.outputs.changelog }}
       skipped: ${{ steps.changelog.outputs.skipped }}
       nextVersion: ${{ steps.changelog.outputs.nextVersion }}
+      nextTag: ${{ steps.changelog.outputs.nextTag }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -34,3 +36,100 @@ jobs:
       - id: changelog
         name: Generate Changelog
         uses: ./.github/actions/generate-changelog
+
+      - name: Bump Version
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          node -p -e "
+            const pkg = JSON.parse(\`$(cat package.json)\`);
+            pkg.version = '${{ steps.changelog.outputs.nextVersion }}';
+            JSON.stringify(pkg, null, 2);
+          " > pkg.json
+          echo "Updated package.json:"
+          cat ./package.json
+          git config --global user.email "changelog.action@github.com"
+          git config --global user.name "Changelog Action"
+          git add ./package.json
+          git commit -m "release: ${{ steps.changelog.outputs.nextTag }}"
+          git push
+
+      - name: Create Tag
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          git tag "${{ steps.changelog.outputs.nextTag }}"
+          git push --tags
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        with:
+          tag_name: ${{ steps.changelog.outputs.nextTag }}
+          release_name: ${{ steps.changelog.outputs.nextTag }}
+          body: ${{ steps.changelog.outputs.changelog }}
+
+  publish-npm:
+    name: Publish to NPM
+    runs-on: ubuntu-22.04
+    needs: [release-notes]
+    if: ${{ needs.release-notes.outputs.skipped == 'false' }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.release-notes.outputs.nextTag }}
+        
+      - name: Pull Version Change
+        run: git pull
+
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Publish to NPM
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+
+  publish-github-action:
+    name: Publish GitHub Action
+    runs-on: ubuntu-22.04
+    needs: [release-notes]
+    if: ${{ needs.release-notes.outputs.skipped == 'false' }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.release-notes.outputs.nextTag }}
+
+      - name: Pull Version Change
+        run: git pull
+
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Action
+        run: pnpm install
+
+      - name: Publish to NPM
+        run: echo 'TODO'
