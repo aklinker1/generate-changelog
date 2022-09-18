@@ -36,3 +36,10 @@ jobs:
 
       - name: Run Tests
         run: pnpm test
+
+      - name: GitHub Action Up to Date
+        run: |
+          if [[ `git status --porcelain` ]]; then
+            git diff
+            exit 1
+          fi
