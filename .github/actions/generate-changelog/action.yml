@@ -32,4 +32,4 @@ outputs:
 
 runs:
   using: node16
-  main: dist/index.cjs
+  main: dist/github-action.cjs
