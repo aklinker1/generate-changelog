@@ -27,6 +27,7 @@ function getOptions(): Options {
   } else {
     options = {};
   }
+  options.changeTemplate = getOptionalInput("changeTemplate");
   options.breakingChangeHeading = getOptionalInput("breakingChangeHeading");
   options.featHeading = getOptionalInput("featHeading");
   options.fixHeading = getOptionalInput("fixHeading");

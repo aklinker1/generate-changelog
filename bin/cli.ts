@@ -1,6 +1,7 @@
 import { program } from "commander";
 import {
   DEFAULT_BREAKING_CHANGE_HEADING,
+  DEFAULT_CHANGE_TEMPLATE,
   DEFAULT_FEAT_HEADING,
   DEFAULT_FIX_HEADING,
   Options,
@@ -42,6 +43,11 @@ program
     "--breaking-change-heading <text>",
     "Custom heading for breaking changes",
     DEFAULT_BREAKING_CHANGE_HEADING
+  )
+  .option(
+    "--change-template <text>",
+    "Template.js template string for defining how change list items are rendered to the changelog.",
+    DEFAULT_CHANGE_TEMPLATE
   )
   .option(
     "-m --module <text>",

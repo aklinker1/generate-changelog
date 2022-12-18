@@ -8,6 +8,7 @@ specifiers:
   esbuild: ^0.15.8
   rimraf: ^3.0.2
   simple-git: ^3.14.1
+  templater.js: ^3.0.1
   tsup: ^6.2.3
   tsx: ^3.9.0
   typescript: ^4.8.3
@@ -16,6 +17,7 @@ specifiers:
 
 dependencies:
   commander: 9.4.0
+  templater.js: 3.0.1
 
 devDependencies:
   '@actions/core': 1.10.0
@@ -984,6 +986,10 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
     dev: true
+
+  /templater.js/3.0.1:
+    resolution: {integrity: sha512-dQfUXWB+jFBxp+9Ohzn+WWqcxs71P2hrbGUzyACpRKrD5YOrMRI/G3DkCdS+6UyL6iOiAb9iCx/d2xg2PFOt3w==}
+    dev: false
 
   /thenify-all/1.6.0:
     resolution: {integrity: sha512-RNxQH/qI8/t3thXJDwcstUO4zeqo64+Uy/+sNVRBx4Xn2OX+OZ9oP+iJnNFqplFra2ZUVeKCSa2oVWi3T4uVmA==}

@@ -27,7 +27,8 @@
     "prepack": "rimraf dist && pnpm build:package && pnpm build:cli"
   },
   "dependencies": {
-    "commander": "^9.4.0"
+    "commander": "^9.4.0",
+    "templater.js": "^3.0.1"
   },
   "devDependencies": {
     "@actions/core": "^1.10.0",

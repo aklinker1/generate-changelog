@@ -1,6 +1,7 @@
 import simpleGit, { SimpleGit } from "simple-git";
 import {
   DEFAULT_BREAKING_CHANGE_HEADING,
+  DEFAULT_CHANGE_TEMPLATE,
   DEFAULT_FEAT_HEADING,
   DEFAULT_FIX_HEADING,
   Options,
@@ -12,6 +13,7 @@ import {
   getPrevVersion,
   getTagPrefix,
 } from "./utils/versioning";
+import templater from "templater.js";
 
 export async function generateChangelog(
   options: Options = {},
@@ -76,12 +78,17 @@ function renderChangelog({
       "",
       `### ${featuresText}`,
       "",
-      ...changes.features.map(formatCommit)
+      ...changes.features.map(formatCommit(options))
     );
   }
   if (changes.fixes.length > 0) {
     const fixesText = options.fixHeading ?? DEFAULT_FIX_HEADING;
-    lines.push("", `### ${fixesText}`, "", ...changes.fixes.map(formatCommit));
+    lines.push(
+      "",
+      `### ${fixesText}`,
+      "",
+      ...changes.fixes.map(formatCommit(options))
+    );
   }
 
   if (changes.breakingChanges.length > 0) {
@@ -91,7 +98,7 @@ function renderChangelog({
       "",
       `### ${breakingChangesText}`,
       "",
-      ...changes.breakingChanges.map(formatCommit)
+      ...changes.breakingChanges.map(formatCommit(options))
     );
   }
 
@@ -100,25 +107,42 @@ function renderChangelog({
   return lines.join("\n").trim();
 }
 
-function formatCommit(commit: Pick<Commit, "message" | "hash">): string {
-  const scopeRegex = /.*\((.*?)\):\s*?(.*)/;
-  const scopeMatch = scopeRegex.exec(commit.message);
-  if (scopeMatch)
-    return `- **${scopeMatch[1]}:** ${scopeMatch[2].trim()} (${commit.hash})`;
+function formatCommit({
+  changeTemplate,
+}: {
+  changeTemplate?: string;
+}): (commit: Commit) => string {
+  const template = templater(changeTemplate ?? DEFAULT_CHANGE_TEMPLATE);
 
-  const noScopeRegex = /.*?:\s*?(.*)/;
-  const noScopeMatch = noScopeRegex.exec(commit.message);
-  if (noScopeMatch) return `- ${noScopeMatch[1].trim()} (${commit.hash})`;
+  return (commit) => {
+    let scope: string | undefined;
+    let message: string;
 
-  throw Error("Could not parse commit: " + commit.message);
+    const scopeRegex = /.*\((.*?)\):\s*?(.*)/;
+    const scopeMatch = scopeRegex.exec(commit.message);
+
+    const noScopeRegex = /.*?:\s*?(.*)/;
+    const noScopeMatch = noScopeRegex.exec(commit.message);
+
+    if (scopeMatch) {
+      scope = scopeMatch[1];
+      message = scopeMatch[2].trim();
+    } else if (noScopeMatch) {
+      message = noScopeMatch[1].trim();
+    } else {
+      throw Error("Could not parse commit: " + commit.message);
+    }
+
+    return template({ message, scope, commit });
+  };
 }
 
 function getBreakingChanges(commit: Commit) {
-  const changes: Pick<Commit, "message" | "hash">[] = [];
+  const changes: Commit[] = [];
   if (commit.message.includes("!:")) changes.push(commit);
   commit.body.split("\n").forEach((line) => {
     if (line.startsWith("BREAKING CHANGE:"))
-      changes.push({ message: line, hash: commit.hash });
+      changes.push({ ...commit, message: line });
   });
   return changes;
 }

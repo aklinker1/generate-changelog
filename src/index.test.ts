@@ -66,6 +66,69 @@ Download via Docker Hub
   });
 });
 
+test("Customize list item text", async () => {
+  const options: Options = {
+    module: "Server",
+    scopes: ["api", "ui"],
+    prefix: "Download via Docker Hub",
+    changeTemplate: "- {{ message }} - {{ commit.hash }}",
+  };
+  const commits: Commit[] = [
+    mockCommit({
+      hash: "7890",
+      message: "fix(api): some API work 2",
+    }),
+    mockCommit({
+      hash: "6789",
+      message: "chore(api): some API chore",
+    }),
+    mockCommit({
+      hash: "5678",
+      message: "release: cli-v0.5.0",
+    }),
+    mockCommit({
+      hash: "4567",
+      message: "fix(cli): Some CLI work",
+    }),
+    mockCommit({
+      hash: "3456",
+      message: "feat(ui): Some UI work 2",
+    }),
+    mockCommit({
+      hash: "2345",
+      message: "fix(ui): Some UI work 1",
+    }),
+    mockCommit({
+      hash: "1234",
+      message: "fix(api): Some API work 1",
+    }),
+  ];
+  const tags = ["cli-v0.5.0", "server-v1.1.1", "server-v1.0.4"];
+  const git = testGit({ commits, tags });
+
+  const output = await generateChangelog(options, git);
+  expect(output).toEqual({
+    prevVersion: "1.1.1",
+    prevTag: "server-v1.1.1",
+    nextVersion: "1.2.0",
+    nextTag: "server-v1.2.0",
+    skipped: false,
+    changelog: `
+Download via Docker Hub
+
+### Features
+
+- Some UI work 2 - 3456
+
+### Bug Fixes
+
+- Some API work 1 - 1234
+- Some UI work 1 - 2345
+- some API work 2 - 7890
+`.trim(),
+  });
+});
+
 test("Example CLI changelog", async () => {
   const options: Options = {
     module: "CLI",
