@@ -15,6 +15,8 @@ inputs:
     description: "See https://github.com/aklinker1/generate-changelog/blob/main/src/types/options.ts"
   scopes:
     description: "See https://github.com/aklinker1/generate-changelog/blob/main/src/types/options.ts"
+  changeTemplate:
+    description: "See https://github.com/aklinker1/generate-changelog/blob/main/src/types/options.ts"
 
 outputs:
   prevVersion:
