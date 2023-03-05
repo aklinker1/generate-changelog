@@ -60,8 +60,8 @@ program
     (value) => value.split(",").map((item) => item.trim())
   )
   .action(async (_, options: Options) => {
-    console.log(_);
+    console.error(_);
     const output = await generateChangelog(options);
-    console.error(JSON.stringify(output, null, 2));
+    console.log(JSON.stringify(output, null, 2));
   })
   .parse();

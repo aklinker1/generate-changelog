@@ -11,11 +11,11 @@ export async function findPrevTag({
   options: Options;
 }): Promise<string | undefined> {
   const tags = (await git.tags()).all.reverse();
-  console.log("Tags:", tags);
+  console.error("Tags:", tags);
   const tagPrefix = getTagPrefix({ options });
-  console.log(`Finding latest tag that starts with "${tagPrefix}"`);
+  console.error(`Finding latest tag that starts with "${tagPrefix}"`);
   const prevTag = tags.find((tag) => tag.startsWith(tagPrefix));
-  console.log(`Previous tag: ${prevTag}`);
+  console.error(`Previous tag: ${prevTag}`);
   return prevTag;
 }
 
@@ -30,10 +30,10 @@ export async function findRelevantCommits({
 }) {
   let commits: LogResult;
   if (!prevTag) {
-    console.log(`Getting all commits`);
+    console.error(`Getting all commits`);
     commits = await git.log();
   } else {
-    console.log(`Getting commits since previous tag`);
+    console.error(`Getting commits since previous tag`);
     commits = await git.log({ from: prevTag, to: "HEAD" });
   }
 

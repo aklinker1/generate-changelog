@@ -19,7 +19,7 @@ export async function generateChangelog(
   options: Options = {},
   git: SimpleGit = simpleGit()
 ) {
-  console.log("Options:", options);
+  console.error("Options:", options);
 
   const prevTag = await findPrevTag({ git, options });
   const prevVersion = getPrevVersion({ prevTag, options });
@@ -38,7 +38,7 @@ export async function generateChangelog(
     nextTag,
     nextVersion,
   };
-  console.log("Results:", results);
+  console.error("Results:", results);
   return results;
 }
 

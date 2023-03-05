@@ -28,12 +28,12 @@ export function getNextVersion({
   changes: Changes;
 }): string {
   if (!prevVersion) {
-    console.log("No previous tag, using 1.0.0");
+    console.error("No previous tag, using 1.0.0");
     return "1.0.0";
   }
 
   let [major, minor, patch] = prevVersion.split(".").map(Number);
-  console.log(`Previous version: ${major}.${minor}.${patch}`);
+  console.error(`Previous version: ${major}.${minor}.${patch}`);
 
   if (changes.breakingChanges.length > 0) {
     major++;

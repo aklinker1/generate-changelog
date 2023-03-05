@@ -8192,7 +8192,7 @@ const versioning_1 = __nccwpck_require__(1756);
 const templater_js_1 = __importDefault(__nccwpck_require__(8884));
 function generateChangelog(options = {}, git = (0, simple_git_1.default)()) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("Options:", options);
+        console.error("Options:", options);
         const prevTag = yield (0, git_1.findPrevTag)({ git, options });
         const prevVersion = (0, versioning_1.getPrevVersion)({ prevTag, options });
         const commits = yield (0, git_1.findRelevantCommits)({ git, prevTag, options });
@@ -8209,7 +8209,7 @@ function generateChangelog(options = {}, git = (0, simple_git_1.default)()) {
             nextTag,
             nextVersion,
         };
-        console.log("Results:", results);
+        console.error("Results:", results);
         return results;
     });
 }
@@ -8324,11 +8324,11 @@ const versioning_1 = __nccwpck_require__(1756);
 function findPrevTag({ git, options, }) {
     return __awaiter(this, void 0, void 0, function* () {
         const tags = (yield git.tags()).all.reverse();
-        console.log("Tags:", tags);
+        console.error("Tags:", tags);
         const tagPrefix = (0, versioning_1.getTagPrefix)({ options });
-        console.log(`Finding latest tag that starts with "${tagPrefix}"`);
+        console.error(`Finding latest tag that starts with "${tagPrefix}"`);
         const prevTag = tags.find((tag) => tag.startsWith(tagPrefix));
-        console.log(`Previous tag: ${prevTag}`);
+        console.error(`Previous tag: ${prevTag}`);
         return prevTag;
     });
 }
@@ -8337,11 +8337,11 @@ function findRelevantCommits({ git, prevTag, options, }) {
     return __awaiter(this, void 0, void 0, function* () {
         let commits;
         if (!prevTag) {
-            console.log(`Getting all commits`);
+            console.error(`Getting all commits`);
             commits = yield git.log();
         }
         else {
-            console.log(`Getting commits since previous tag`);
+            console.error(`Getting commits since previous tag`);
             commits = yield git.log({ from: prevTag, to: "HEAD" });
         }
         return (commits.all
@@ -8392,11 +8392,11 @@ function getPrevVersion({ prevTag, options, }) {
 exports.getPrevVersion = getPrevVersion;
 function getNextVersion({ prevVersion, changes, }) {
     if (!prevVersion) {
-        console.log("No previous tag, using 1.0.0");
+        console.error("No previous tag, using 1.0.0");
         return "1.0.0";
     }
     let [major, minor, patch] = prevVersion.split(".").map(Number);
-    console.log(`Previous version: ${major}.${minor}.${patch}`);
+    console.error(`Previous version: ${major}.${minor}.${patch}`);
     if (changes.breakingChanges.length > 0) {
         major++;
         minor = 0;
