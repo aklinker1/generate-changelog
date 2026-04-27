@@ -1,3 +1,7 @@
+> [!NOTE]
+> Deprecated. Use [`@aklinker1/zero-changelog`](https://github.com/aklinker1/zero-changelog) instead
+
+
 # Generate Changelog
 
 A tool that generates a changelog and next version based on your commit history. It follows some of the basic conventional commit standards for bumping versions, but it is not a complete implementation of that standard.
